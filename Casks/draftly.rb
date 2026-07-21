@@ -20,7 +20,7 @@ cask "draftly" do
   desc "Precision CAD drafting app with AutoCAD-parity workflows"
   homepage "https://draftlycad.com/"
 
-  depends_on macos: ">= :sonoma"
+  depends_on macos: :sonoma
   depends_on arch: :arm64
 
   app "Draftly.app"
