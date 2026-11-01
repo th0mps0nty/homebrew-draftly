@@ -1,46 +1,44 @@
+# Homebrew Cask for Draftly (macOS .dmg).
+#
+# Lives in the tap repo th0mps0nty/homebrew-draftly at Casks/draftly.rb:
+#   brew install --cask th0mps0nty/draftly/draftly
+#
+# The DMG comes from the public th0mps0nty/draftly-releases repo; bump
+# `version` and `sha256` from each Release's SHA256SUMS.txt.
 cask "draftly" do
-  version "1.0.0"
-  sha256 "55dd7396577330a63ec91e38aa2b584f8b2342b58c3c229cd6287021f7dd3dbb"
+  version "1.0.8"
+  sha256 "3fd9048c009e77af49c58ab62bdc068ae608d13cedf411384c7ef70f116c1d26"
 
-  # The asset lives on the PRIVATE th0mps0nty/_draftly repo, so the plain
-  # /releases/download/ URL 404s without credentials. The API asset endpoint
-  # plus a token does work — set HOMEBREW_GITHUB_API_TOKEN (a classic PAT with
-  # `repo` scope, or `gh auth token`) before installing.
-  #
-  # NOTE: the asset id is per-upload, so it changes with every release. That is
-  # the price of hosting privately; publishing artifacts publicly would let this
-  # be a stable versioned URL instead.
-  url "https://api.github.com/repos/th0mps0nty/_draftly/releases/assets/484844146",
-      header: [
-        "Accept: application/octet-stream",
-        "Authorization: Bearer #{ENV.fetch("HOMEBREW_GITHUB_API_TOKEN", "")}",
-      ]
-
-  name "Draftly"
-  desc "Precision CAD drafting app with AutoCAD-parity workflows"
+  url "https://github.com/th0mps0nty/draftly-releases/releases/download/desktop-v#{version}/Draftly-#{version}.dmg",
+      verified: "github.com/th0mps0nty/draftly-releases/"
+  name "Draftly CAD"
+  desc "Precision 2D CAD drafting with a command-line, object snaps, layers, and DXF"
   homepage "https://draftlycad.com/"
 
-  depends_on macos: :sonoma
-  depends_on arch: :arm64
-
-  app "Draftly.app"
-
-  # This build is AD-HOC SIGNED and NOT NOTARIZED, so Gatekeeper quarantines it
-  # on any machine that did not build it. Stripping the attribute here is what
-  # makes `brew install` produce a launchable app; once the release pipeline
-  # signs with a Developer ID and notarizes, this stanza should be DELETED
-  # rather than kept as a permanent bypass.
-  postflight do
-    system_command "/usr/bin/xattr",
-                   args: ["-dr", "com.apple.quarantine", "#{appdir}/Draftly.app"],
-                   sudo: false
+  # Only offer upgrades once auto-versioning is wired; until then this tracks
+  # GitHub Releases.
+  livecheck do
+    url :url
+    strategy :github_latest
+    # Releases are tagged desktop-vX.Y.Z; the default pattern only reads vX.Y.Z.
+    regex(/^desktop-v(\d+(?:\.\d+)+)$/i)
   end
 
-  uninstall quit: "com.draftlycad.app"
+  # Draftly requires macOS 12+. The Xcode project still says 11.0, but the
+  # Flutter tooling raises the minimum deployment target to 12.0 at build time
+  # ("Updating minimum macOS deployment target to 12.0" in the release job), so
+  # 12 is what the shipped binary actually requires. Keep this in step with
+  # packaging/downloads.json and marketing/download/index.html.
+  depends_on macos: ">= :monterey"
 
+  app "Draftly CAD.app"
+
+  # Clean up app support/prefs on `brew uninstall --zap`.
+  # The app is sandboxed (macos/Runner/Release.entitlements), so its data lives
+  # under ~/Library/Containers, not directly under Application Support.
   zap trash: [
     "~/Library/Application Support/com.draftlycad.app",
-    "~/Library/Caches/com.draftlycad.app",
+    "~/Library/Containers/com.draftlycad.app",
     "~/Library/Preferences/com.draftlycad.app.plist",
     "~/Library/Saved Application State/com.draftlycad.app.savedState",
   ]
