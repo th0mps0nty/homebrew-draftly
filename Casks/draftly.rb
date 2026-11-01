@@ -9,8 +9,7 @@ cask "draftly" do
   version "1.0.8"
   sha256 "3fd9048c009e77af49c58ab62bdc068ae608d13cedf411384c7ef70f116c1d26"
 
-  url "https://github.com/th0mps0nty/draftly-releases/releases/download/desktop-v#{version}/Draftly-#{version}.dmg",
-      verified: "github.com/th0mps0nty/draftly-releases/"
+  url "https://github.com/th0mps0nty/draftly-releases/releases/download/desktop-v#{version}/Draftly-#{version}.dmg"
   name "Draftly CAD"
   desc "Precision 2D CAD drafting with a command-line, object snaps, layers, and DXF"
   homepage "https://draftlycad.com/"
