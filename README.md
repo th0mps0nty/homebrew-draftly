@@ -1,32 +1,20 @@
 # homebrew-draftly
 
-Private Homebrew tap for [Draftly](https://draftlycad.com) — precision CAD drafting.
+Homebrew tap for [Draftly CAD](https://draftlycad.com), precision 2D CAD drafting.
 
 ## Install
 
-The artifacts live on the private `th0mps0nty/_draftly` repo, so Homebrew needs a
-token that can read it:
-
 ```sh
-export HOMEBREW_GITHUB_API_TOKEN="$(gh auth token)"
-brew tap th0mps0nty/draftly
-brew install --cask draftly
+brew install --cask th0mps0nty/draftly/draftly
 ```
 
-## Current build
-
-`1.0.0` is built locally from `master` (schema v6), **ad-hoc signed and not
-notarized**. The cask strips the quarantine attribute on install so the app can
-launch; that stanza goes away once releases are Developer ID signed and notarized.
+The tap repo is private for now, so tapping needs GitHub access to it. The DMG
+itself comes from the public
+[draftly-releases](https://github.com/th0mps0nty/draftly-releases/releases/latest)
+repo and is Developer ID signed and notarized. macOS 12 or later, Apple Silicon
+and Intel.
 
 ## Updating for a new release
 
-The `url` points at a GitHub *asset id*, which changes on every upload. After
-publishing a new build:
-
-```sh
-gh api repos/th0mps0nty/_draftly/releases/tags/<tag> --jq '.assets[]|"\(.name) \(.id)"'
-shasum -a 256 <the-zip>
-```
-
-then update `version`, `sha256` and the asset id in `Casks/draftly.rb`.
+Copy `packaging/homebrew/draftly.rb` from the app repo after bumping `version`
+and `sha256` from the release's `SHA256SUMS.txt`.
