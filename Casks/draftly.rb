@@ -28,7 +28,7 @@ cask "draftly" do
   # ("Updating minimum macOS deployment target to 12.0" in the release job), so
   # 12 is what the shipped binary actually requires. Keep this in step with
   # packaging/downloads.json and marketing/download/index.html.
-  depends_on macos: ">= :monterey"
+  depends_on macos: :monterey
 
   app "Draftly CAD.app"
 
