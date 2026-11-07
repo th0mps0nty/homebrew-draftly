@@ -6,8 +6,8 @@
 # The DMG comes from the public th0mps0nty/draftly-releases repo; bump
 # `version` and `sha256` from each Release's SHA256SUMS.txt.
 cask "draftly" do
-  version "1.0.9"
-  sha256 "dfd203cab585ba2677884629e461043cd8fb93170d5d2b11ebe633a020d20167"
+  version "1.0.11"
+  sha256 "a960654914bd1666324e3f988d16800e6c7c9c0e8c18b77ec082e2bb9b51ead6"
 
   url "https://github.com/th0mps0nty/draftly-releases/releases/download/desktop-v#{version}/Draftly-#{version}.dmg"
   name "Draftly CAD"
